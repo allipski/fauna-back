@@ -2,18 +2,68 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Organization {
-    id        Int      @id @default(autoincrement())
-    name      String   @unique @db.VarChar(255)
-    password  String   @db.VarChar(255)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  email     String    @unique @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  projects  Project[]
+  session   Session?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Session {
+  id             Int          @id @default(autoincrement())
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId Int          @unique
+  token          String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Project {
+  id             Int          @id @default(autoincrement())
+  name           String       @db.VarChar(255)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId Int          @unique
+  species        Species[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Species {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(255)
+  location    String       @db.VarChar(255)
+  status      String       @db.VarChar(255)
+  project     Project      @relation(fields: [projectId], references: [id])
+  projectId   Int          @unique
+  individuals Individual[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Individual {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(255)
+  geocode         String   @db.VarChar(255)
+  age             Int
+  onRehab         Boolean  @default(false)
+  natureReady     Boolean  @default(false)
+  releaseDate     DateTime
+  monitorInterval Int
+  lastMonitoDate  DateTime
+  species         Species  @relation(fields: [speciesId], references: [id])
+  speciesId       Int      @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
