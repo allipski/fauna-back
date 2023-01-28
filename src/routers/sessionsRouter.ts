@@ -1,10 +1,10 @@
+import { signIn } from "@/controllers";
+import { validateSignInInput } from "@/middlewares/validateSignInInput";
 import { Router } from "express";
-import { authenticateToken } from "@/middlewares";
 
 const sessionsRouter = Router();
 
 sessionsRouter
-    .all("/*", authenticateToken)
-    .post('/', )
+    .post('/', validateSignInInput, signIn)
 
 export { sessionsRouter };
