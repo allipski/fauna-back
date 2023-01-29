@@ -1,7 +1,6 @@
 import { AuthenticatedRequest } from "@/middlewares";
 import { Response } from "express";
 import sessionsService from "@/services/sessionsService"
-import bcrypt from "bcrypt";
 import httpStatus from "http-status";
 
 async function signIn(req: AuthenticatedRequest, res: Response) {
@@ -16,9 +15,19 @@ async function signIn(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function signOut(req: AuthenticatedRequest, res: Response) {
+  const organizationId = req.userId;
+  try {
+    await sessionsService.signOut(organizationId)
+    return res.sendStatus(httpStatus.OK);
+  } catch (error) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+}
+
 export type signInData = {
     email: string,
     password: string
 }
 
-export { signIn };
+export { signIn, signOut };

@@ -1,16 +1,34 @@
 import { prisma } from "@/config";
 
 async function createSession(userId: number, token: string) {
-    return await prisma.session.create({
+    const session = await prisma.session.create({
         data: {
             organizationId: userId,
             token: token
         }
     })
+    const organization = await prisma.organization.findUnique({
+        where: {
+            id: userId
+        }
+    })
+    return { 
+        organization: organization.name,
+        token: session.token 
+    }
+}
+
+async function deleteSession(userId: number) {
+    return await prisma.session.delete({
+        where: {
+            organizationId: userId
+        }
+    })
 }
 
 const sessionsRepository = {
-    createSession
+    createSession,
+    deleteSession
 }
 
 export default sessionsRepository;
