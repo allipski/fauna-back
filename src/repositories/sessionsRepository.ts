@@ -1,9 +1,15 @@
 import { prisma } from "@/config";
 
 async function createSession(userId: number, token: string) {
-    const session = await prisma.session.create({
-        data: {
+    const session = await prisma.session.upsert({
+        where: {
+            organizationId: userId
+        },
+        create: {
             organizationId: userId,
+            token: token
+        },
+        update: {
             token: token
         }
     })
