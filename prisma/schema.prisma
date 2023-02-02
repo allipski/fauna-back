@@ -34,7 +34,7 @@ model Project {
   id             Int          @id @default(autoincrement())
   name           String       @db.VarChar(255)
   organization   Organization @relation(fields: [organizationId], references: [id])
-  organizationId Int          
+  organizationId Int
   description    String       @db.VarChar(500)
   img            String       @db.VarChar(2000)
   species        Species[]
@@ -47,8 +47,9 @@ model Species {
   name        String       @db.VarChar(255)
   location    String       @db.VarChar(255)
   status      String       @db.VarChar(255)
+  img         String       @db.VarChar(2000)
   project     Project      @relation(fields: [projectId], references: [id])
-  projectId   Int          @unique
+  projectId   Int          
   individuals Individual[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
@@ -59,13 +60,15 @@ model Individual {
   name            String   @db.VarChar(255)
   geocode         String   @db.VarChar(255)
   age             Int
-  onRehab         Boolean  @default(false)
+  gender          String
+  onRehab         Boolean  @default(true)
   natureReady     Boolean  @default(false)
-  releaseDate     DateTime
-  monitorInterval Int
-  lastMonitoDate  DateTime
-  species         Species  @relation(fields: [speciesId], references: [id])
-  speciesId       Int      @unique
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  releaseDate     DateTime?
+  monitorInterval Int?
+  lastMonitorDate  DateTime?
+  img             String   @db.VarChar(2000)
+  species   Species  @relation(fields: [speciesId], references: [id])
+  speciesId Int      
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

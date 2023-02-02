@@ -20,9 +20,19 @@ async function getProjects(organizationId: number) {
     }
 }
 
+async function getProject(projectId: number) {
+    try {
+        const project = await projectsRepository.findProjectById(projectId);
+        return project; 
+    } catch (err) {
+        throw notFoundError();
+    }
+}
+
 const projectsService = {
     postProject,
-    getProjects
+    getProjects,
+    getProject
 }
 
 export default projectsService

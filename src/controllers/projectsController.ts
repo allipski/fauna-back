@@ -32,4 +32,15 @@ async function getProjects(req: AuthenticatedRequest, res: Response) {
     }
 }
 
-export { postProject, getProjects };
+async function getProject(req: AuthenticatedRequest, res: Response) {
+  const projectId  = req.params.id
+
+  try {
+    const projects = await projectsService.getProject(Number(projectId))
+    return res.status(httpStatus.OK).send(projects);
+  } catch (error) {
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+}
+
+export { postProject, getProjects, getProject };
