@@ -7,6 +7,7 @@ async function createSpecies(speciesData: SpeciesType, projectId: number) {
             name: speciesData.name,
             location: speciesData.location,
             status: speciesData.status,
+            description: speciesData.description,
             img: speciesData.img,
             projectId: projectId
         }

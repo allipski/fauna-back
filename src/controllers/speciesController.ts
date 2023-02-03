@@ -7,17 +7,17 @@ export type SpeciesType = {
   name: string,
   location: string,
   status: string,
+  description: string,
   img: string,
   projectId: number
 }
 
 async function postSpecies(req: AuthenticatedRequest, res: Response) {
-  const SpeciesData = req.body as SpeciesType;
-  const organizationId = req.userId
+  const speciesData = req.body as SpeciesType;
 
   try {
-    const Species = await speciesService.postSpecies(SpeciesData, organizationId)
-    return res.status(httpStatus.CREATED).send(Species);
+    const species = await speciesService.postSpecies(speciesData, speciesData.projectId)
+    return res.status(httpStatus.CREATED).send(species);
   } catch (error) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }

@@ -2,10 +2,10 @@ import { notFoundError, unauthorizedError } from "@/errors";
 import speciesRepository from "@/repositories/speciesRepository";
 import { SpeciesType } from "@/controllers";
 
-async function postSpecies(SpeciesData: SpeciesType, organizationId: number) {
+async function postSpecies(SpeciesData: SpeciesType, projectId: number) {
     try {
-        const Species = await speciesRepository.createSpecies(SpeciesData, organizationId);
-        return Species; 
+        const species = await speciesRepository.createSpecies(SpeciesData, projectId);
+        return species; 
     } catch (err) {
         throw unauthorizedError();
     }

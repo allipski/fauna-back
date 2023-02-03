@@ -6,8 +6,11 @@ import httpStatus from "http-status";
 export async function validateSpeciesInput(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     const projectSchema = Joi.object({
         name: Joi.string().required().trim().min(1),
+        location: Joi.string().required().trim().min(1),
+        status: Joi.string().required().trim().min(1).valid("Levemente ameaçado", "Moderadamente Ameaçado", "Severamente ameaçado"),
         description: Joi.string().required().trim().min(1).max(500),
-        img: Joi.string().required().trim().min(1).max(2000)
+        img: Joi.string().required().trim().min(1).max(2000),
+        projectId: Joi.number().required()
       });
 
     const joiValidation = projectSchema.validate(req.body, {abortEarly: false});
