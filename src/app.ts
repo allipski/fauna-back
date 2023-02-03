@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import cors from 'cors';
 import { connectDb, disconnectDb } from '@/config/database';
 import { organizationsRouter, projectsRouter, sessionsRouter, SpeciesRouter } from './routers';
+import { IndividualsRouter } from './routers/individualsRouter';
 
 const app = express();
 
@@ -12,7 +13,8 @@ app
   .use("/sign-up", organizationsRouter)
   .use("/sign-in", sessionsRouter)
   .use("/projects", projectsRouter)
-  .use("/species", SpeciesRouter);
+  .use("/species", SpeciesRouter)
+  .use("/individuals", IndividualsRouter);
 
 export function init(): Promise<Express> {
     connectDb();

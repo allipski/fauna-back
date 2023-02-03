@@ -4,6 +4,7 @@ import httpStatus from "http-status";
 import speciesService from "@/services/speciesService";
 
 export type SpeciesType = {
+  id: number;
   name: string,
   location: string,
   status: string,
