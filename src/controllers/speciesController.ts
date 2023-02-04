@@ -25,15 +25,11 @@ async function postSpecies(req: AuthenticatedRequest, res: Response) {
 }
 
 async function getSpecies(req: AuthenticatedRequest, res: Response) {
-    const projectId = Number(req.query.project);
+    const queries = req.query as {project?: number, status?: string, name?: string, location?:string};
+    if(queries.project) queries.project = Number(queries.project);
 
     try {
-      let species;
-      if (projectId) {
-        species = await speciesService.getSpecies(projectId);
-      } else {
-        species = await speciesService.getSpecies();
-      }
+      const species = await speciesService.getSpecies(queries);
       return res.status(httpStatus.OK).send(species);
     } catch (error) {
       return res.sendStatus(httpStatus.NOT_FOUND);
@@ -44,8 +40,8 @@ async function getSingleSpecies(req: AuthenticatedRequest, res: Response) {
   const SpeciesId  = req.params.id
 
   try {
-    const Speciess = await speciesService.getSpecies(Number(SpeciesId))
-    return res.status(httpStatus.OK).send(Speciess);
+    const species = await speciesService.getSingleSpecies(Number(SpeciesId))
+    return res.status(httpStatus.OK).send(species);
   } catch (error) {
     return res.sendStatus(httpStatus.NOT_FOUND);
   }

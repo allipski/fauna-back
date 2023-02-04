@@ -14,11 +14,13 @@ async function createSpecies(speciesData: SpeciesType, projectId: number) {
     })
 }
 
-async function findSpeciesWithIndividualCount(projectId?: number) {
-    if(projectId){
+async function findSpeciesWithIndividualCount(queries: {project?: number, status?: string, name?: string, location?:string}) {
         return await prisma.species.findMany({
             where: {
-                projectId: projectId
+                projectId: queries.project,
+                status: queries.status,
+                name: queries.name,
+                location: queries.location
             },
             select :{
                 id: true,
@@ -32,19 +34,7 @@ async function findSpeciesWithIndividualCount(projectId?: number) {
                     }
                 }
             },
-        })
-    } else {
-        return await prisma.species.findMany({
-            select :{
-                id: true,
-                name: true,
-                location: true,
-                status: true,
-                img: true
-            }
-        })
-    }
-    
+        })    
 }
 
 async function findSpeciesById(speciesId: number) {

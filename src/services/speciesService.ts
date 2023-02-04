@@ -11,14 +11,9 @@ async function postSpecies(SpeciesData: SpeciesType, projectId: number) {
     }
 }
 
-async function getSpecies(projectId?: number) {
+async function getSpecies(queries: {project?: number, status?: string, name?: string, location?:string}) {
     try {
-        let species;
-      if (projectId) {
-        species = await speciesRepository.findSpeciesWithIndividualCount(projectId);
-      } else {
-        species = await speciesRepository.findSpeciesWithIndividualCount();
-      }
+        const species = await speciesRepository.findSpeciesWithIndividualCount(queries);
         return species; 
     } catch (err) {
         throw notFoundError();
