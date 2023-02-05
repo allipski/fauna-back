@@ -4,9 +4,9 @@ import httpStatus from "http-status";
 import projectsService from "@/services/projectsService";
 
 export type ProjectType = {
-  name: string,
-  description: string,
-  img: string
+  name?: string,
+  description?: string,
+  img?: string
 }
 
 async function postProject(req: AuthenticatedRequest, res: Response) {
@@ -16,6 +16,24 @@ async function postProject(req: AuthenticatedRequest, res: Response) {
   try {
     const project = await projectsService.postProject(projectData, organizationId)
     return res.status(httpStatus.CREATED).send(project);
+  } catch (error) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+}
+
+async function updateProject(req: AuthenticatedRequest, res: Response) {
+  const rawData = req.body;
+  const projectId  = Number(req.params.id);
+
+  const projectData = {
+        name: rawData.name === '' ? undefined : rawData.name,
+        description: rawData.description === '' ? undefined : rawData.description,
+        img: rawData.img === '' ? undefined : rawData.img,
+  }
+
+  try {
+    const project = await projectsService.updateProject(projectData, projectId)
+    return res.status(httpStatus.OK).send(project);
   } catch (error) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
@@ -43,4 +61,4 @@ async function getProject(req: AuthenticatedRequest, res: Response) {
   }
 }
 
-export { postProject, getProjects, getProject };
+export { postProject, getProjects, getProject, updateProject };

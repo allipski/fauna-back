@@ -20,7 +20,8 @@ async function createSession(userId: number, token: string) {
     })
     return { 
         organization: organization.name,
-        token: session.token 
+        token: session.token,
+        email: organization.email
     }
 }
 

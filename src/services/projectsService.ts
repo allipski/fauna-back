@@ -11,6 +11,15 @@ async function postProject(projectData: ProjectType, organizationId: number) {
     }
 }
 
+async function updateProject(projectData: ProjectType, id: number) {
+    try {
+        const project = await projectsRepository.updateProject(projectData, id);
+        return project; 
+    } catch (err) {
+        throw unauthorizedError();
+    }
+}
+
 async function getProjects(organizationId: number) {
     try {
         const project = await projectsRepository.findProjects(organizationId);
@@ -32,7 +41,8 @@ async function getProject(projectId: number) {
 const projectsService = {
     postProject,
     getProjects,
-    getProject
+    getProject,
+    updateProject
 }
 
 export default projectsService

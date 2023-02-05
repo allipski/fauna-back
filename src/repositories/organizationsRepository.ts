@@ -1,5 +1,5 @@
 import { prisma } from "@/config";
-import { signUpData } from "@/controllers";
+import { signUpData, UpdateData } from "@/controllers";
 
 async function findByEmail(email : string) {
     return await prisma.organization.findUnique({
@@ -19,9 +19,23 @@ async function createOrganization(signUpData : signUpData) {
     })
 }
 
+async function updateOrganization(data : UpdateData, userId: number) {
+    return await prisma.organization.update({
+        where: {
+            id: userId
+        },
+        data: {
+            name: data.name,
+            email: data.email,
+            password: data.password
+        }
+    })
+}
+
 const organizationsRepository = {
     findByEmail,
-    createOrganization
+    createOrganization,
+    updateOrganization
 }
 
 export default organizationsRepository;

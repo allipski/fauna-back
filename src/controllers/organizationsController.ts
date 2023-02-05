@@ -18,10 +18,42 @@ async function signUp(req: AuthenticatedRequest, res: Response) {
   }
 }
 
+async function updateData(req: AuthenticatedRequest, res: Response) {
+  const rawData = req.body;
+  const userId = req.userId
+
+      const data = {
+        name: rawData.name === '' ? undefined : rawData.name,
+        email: rawData.email === '' ? undefined : rawData.email,
+        password: rawData.password === '' ? undefined : rawData.password,
+        confirmPassword: rawData.confirmPassword === '' ? undefined : rawData.confirmPassword,
+      }
+
+      if(data.password !== data.confirmPassword) return res.status(httpStatus.UNPROCESSABLE_ENTITY).send("Passwords do not match.");
+
+  const passwordHash = data.password? bcrypt.hashSync(data.password, 12) : undefined;
+  const updateData : UpdateData =  { name: data.name, email: data.email, password: passwordHash };
+
+try {
+  const updatedData = await organizationsService.updateOrganization(updateData, userId)
+  return res.status(httpStatus.OK).send(updatedData);
+} catch (error) {
+  return res.sendStatus(httpStatus.NOT_FOUND);
+}
+}
+
 export type signUpData = {
     name: string,
     email: string,
     password: string
 }
 
-export { signUp };
+export type UpdateData = {
+  name?: string,
+  email?: string,
+  password?: string
+  confirmPassword?: string
+}
+
+
+export { signUp, updateData };

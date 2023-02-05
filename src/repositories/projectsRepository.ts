@@ -12,6 +12,19 @@ async function createProject(projectData: ProjectType, organizationId: number) {
     })
 }
 
+async function updateProject(projectData: ProjectType, id: number) {
+    return await prisma.project.update({
+        where: {
+            id: id
+        },
+        data: {
+            name: projectData.name,
+            description: projectData.description,
+            img: projectData.img
+        }
+    })
+}
+
 async function findProjects(organizationId: number) {
     return await prisma.project.findMany({
         where: {
@@ -45,7 +58,8 @@ async function findProjectById(projectId: number) {
 const projectsRepository = {
     createProject,
     findProjects,
-    findProjectById
+    findProjectById,
+    updateProject
 }
 
 export default projectsRepository;
