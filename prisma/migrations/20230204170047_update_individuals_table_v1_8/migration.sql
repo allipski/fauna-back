@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Individual" ADD COLUMN     "captureDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "healthStatus" TEXT NOT NULL DEFAULT 'Saudável';

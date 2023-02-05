@@ -3,6 +3,7 @@ import { Response } from "express";
 import httpStatus from "http-status";
 import individualsService from "@/services/individualsService";
 import { number } from "joi";
+import { IndividualsFilter } from "@/types/types";
 
 export type IndividualType = {
   name: string,
@@ -26,19 +27,13 @@ async function postIndividual(req: AuthenticatedRequest, res: Response) {
 }
 
 async function getIndividuals(req: AuthenticatedRequest, res: Response) {
-    const { species, rehab, released } = req.query
+    const rawQueries = req.query;
+    const queries = {...rawQueries} as IndividualsFilter;
 
-    type Queries = {
-      species: number,
-      rehab: boolean,
-      released: boolean
-    }
-
-    const queries = {
-      species: Number(species),
-      rehab: rehab === 'true' ? true : rehab === 'false' ? false : undefined,
-      released: released === 'true' ? true : released === 'false' ? false : undefined,
-    }
+    if(rawQueries.project) queries.project = Number(rawQueries.project);
+    if(rawQueries.species) queries.species = Number(rawQueries.species);
+    if(rawQueries.rehab) queries.rehab = rawQueries.rehab === 'true' ? true : rawQueries.rehab === 'false' ? false : undefined;
+    if(rawQueries.released) queries.released = rawQueries.released === 'true' ? true : rawQueries.released === 'false' ? false : undefined;
 
     try {
       const individuals = await individualsService.getIndividuals(queries);

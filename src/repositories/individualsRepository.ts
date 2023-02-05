@@ -1,5 +1,6 @@
 import { prisma } from "@/config";
 import { IndividualType } from "@/controllers";
+import { IndividualsFilter } from "@/types/types";
 
 async function createIndividual(individualData: IndividualType, speciesId: number) {
     return await prisma.individual.create({
@@ -16,25 +17,22 @@ async function createIndividual(individualData: IndividualType, speciesId: numbe
     })
 }
 
-async function findIndividuals(queries : {species?: number, rehab?: boolean, released?: boolean}) {    
+async function findIndividuals(queries : IndividualsFilter) {    
     const individuals = await prisma.individual.findMany({
         where: {
             speciesId: queries.species || undefined,
-            onRehab: queries.rehab === true ? true : queries.rehab === undefined ? undefined : false,
-            releaseDate: queries.released === false ? null : undefined
+            gender: queries.gender,
+            onRehab: queries.rehab,
+            releaseDate: queries.released === false ? null : undefined,
+            healthStatus: queries.health,
+            species: {
+                name: queries.speciesName,
+                location: queries.location
+            }
         },
-        select :{
-            id: true,
-            name: true,
-            geocode: true,
-            age: true,
-            gender: true,
-            onRehab: true,
-            natureReady: true,
-            releaseDate: true,
-            img: true,
-            speciesId: true
-        },
+        include: {
+            species: true
+        }
     })
     return queries.released === false || queries.released === undefined ? individuals : individuals.filter(item => item.releaseDate !== null)
 }
